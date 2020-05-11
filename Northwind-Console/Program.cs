@@ -62,7 +62,7 @@ namespace NorthwindConsole
                             else
                             {
                                 logger.Info("Validation passed");
-                                // TODO: save category to db
+                                db.SaveChanges();
                             }
                         }
                         if (!isValid)
