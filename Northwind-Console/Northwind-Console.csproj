@@ -54,6 +54,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Migrations\202005112148089_InitialCreate.cs" />
+    <Compile Include="Migrations\202005112148089_InitialCreate.designer.cs">
+      <DependentUpon>202005112148089_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202005120030063_NewCategoryRules.cs" />
+    <Compile Include="Migrations\202005120030063_NewCategoryRules.designer.cs">
+      <DependentUpon>202005120030063_NewCategoryRules.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202005120039147_NorthwindContextMethods.cs" />
+    <Compile Include="Migrations\202005120039147_NorthwindContextMethods.designer.cs">
+      <DependentUpon>202005120039147_NorthwindContextMethods.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202005120414066_UpdateCharCount.cs" />
+    <Compile Include="Migrations\202005120414066_UpdateCharCount.designer.cs">
+      <DependentUpon>202005120414066_UpdateCharCount.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\Product.cs" />
@@ -71,7 +88,20 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202005112148089_InitialCreate.resx">
+      <DependentUpon>202005112148089_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202005120030063_NewCategoryRules.resx">
+      <DependentUpon>202005120030063_NewCategoryRules.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202005120039147_NorthwindContextMethods.resx">
+      <DependentUpon>202005120039147_NorthwindContextMethods.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202005120414066_UpdateCharCount.resx">
+      <DependentUpon>202005120414066_UpdateCharCount.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Data.Entity.Validation;
 using NLog;
 using NorthwindConsole.Models;
 
@@ -18,6 +19,7 @@ namespace NorthwindConsole
                 string choice;
                 do
                 {
+                    
                     Console.WriteLine("1) Display Categories");
                     Console.WriteLine("2) Add Category");
                     Console.WriteLine("3) Display Category and related products");
@@ -36,79 +38,107 @@ namespace NorthwindConsole
                         {
                             Console.WriteLine($"{item.CategoryName} - {item.Description}");
                         }
-                    } 
+                    }
                     else if (choice == "2")
                     {
+
                         Category category = new Category();
                         Console.WriteLine("Enter Category Name:");
                         category.CategoryName = Console.ReadLine();
                         Console.WriteLine("Enter the Category Description:");
                         category.Description = Console.ReadLine();
 
-                        ValidationContext context = new ValidationContext(category, null, null);
-                        List<ValidationResult> results = new List<ValidationResult>();
+                        // save category to db
+                        var db = new NorthwindContext();
 
-                        var isValid = Validator.TryValidateObject(category, context, results, true);
-                        if (isValid)
+
+
+
+                        try
                         {
-                            var db = new NorthwindContext();
-                            // check for unique name
-                            if (db.Categories.Any(c => c.CategoryName == category.CategoryName))
+                            db.AddCategory(category);
+                            logger.Info($"Category Added: {category.CategoryName}");
+                        }
+                        catch (Exception)
+                        {
+                            foreach (var validationResult in db.GetValidationErrors())
                             {
-                                // generate validation error
-                                isValid = false;
-                                results.Add(new ValidationResult("Name exists", new string[] { "CategoryName" }));
-                            }
-                            else
-                            {
-                                logger.Info("Validation passed");
-                                db.SaveChanges();
+                                foreach (var error in validationResult.ValidationErrors)
+                                {
+                                    logger.Error(
+                                        "Entity Property: {0}, Error {1}",
+                                        error.PropertyName,
+                                        error.ErrorMessage);
+                                }
                             }
                         }
-                        if (!isValid)
-                        {
-                            foreach (var result in results)
-                            {
-                                logger.Error($"{result.MemberNames.First()} : {result.ErrorMessage}");
-                            }
-                        }
-                    } else if (choice == "3")
+                    }
+
+                    else if (choice == "3")
                     {
                         var db = new NorthwindContext();
                         var query = db.Categories.OrderBy(p => p.CategoryId);
+                        List<int> categoryIdCheck = new List<int>();
 
                         Console.WriteLine("Select the category whose products you want to display:");
                         foreach (var item in query)
                         {
                             Console.WriteLine($"{item.CategoryId}) {item.CategoryName}");
+                            categoryIdCheck.Add(item.CategoryId);
                         }
                         int id = int.Parse(Console.ReadLine());
                         Console.Clear();
                         logger.Info($"CategoryId {id} selected");
-                        Category category = db.Categories.FirstOrDefault(c => c.CategoryId == id);
-                        Console.WriteLine($"{category.CategoryName} - {category.Description}");
-                        foreach(Product p in category.Products)
+
+                        try
                         {
-                            Console.WriteLine(p.ProductName);
+                            Category category = db.Categories.FirstOrDefault(c => c.CategoryId == id);
+                            Console.WriteLine($"{category.CategoryName} - {category.Description}");
+                            foreach (Product p in category.Products)
+                            {
+                                Console.WriteLine(p.ProductName);
+                            }
                         }
+                        catch(NullReferenceException)
+                        {
+                            logger.Error($"CategoryID invalid.");
+                        }
+                        
+
                     }
                     else if (choice == "4")
                     {
                         var db = new NorthwindContext();
                         var query = db.Categories.Include("Products").OrderBy(p => p.CategoryId);
-                        foreach(var item in query)
+                        var productList = db.Products.OrderBy(p => p.CategoryId).ToList();
+                        List<int?> productCategoryId = new List<int?>();
+                        foreach(var productItem in productList)
+                        {
+                            productCategoryId.Add(productItem.CategoryId);
+                        }
+                        foreach (var item in query)
                         {
                             Console.WriteLine($"{item.CategoryName}");
-                            foreach(Product p in item.Products)
+                            if (!productCategoryId.Contains(item.CategoryId))
                             {
-                                Console.WriteLine($"\t{p.ProductName}");
+                                Console.WriteLine("\tNo products found.");
                             }
+                            else
+                            {
+                                foreach (Product p in item.Products)
+                                {
+
+                                    Console.WriteLine($"\t{p.ProductName}");
+                                }
+                            }
+                            
                         }
                     }
                     Console.WriteLine();
-
+                    
                 } while (choice.ToLower() != "q");
             }
+            
             catch (Exception ex)
             {
                 logger.Error(ex.Message);
