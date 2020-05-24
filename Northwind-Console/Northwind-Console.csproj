@@ -70,6 +70,18 @@
     <Compile Include="Migrations\202005120414066_UpdateCharCount.designer.cs">
       <DependentUpon>202005120414066_UpdateCharCount.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202005191637335_NewMaxDesLen.cs" />
+    <Compile Include="Migrations\202005191637335_NewMaxDesLen.designer.cs">
+      <DependentUpon>202005191637335_NewMaxDesLen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202005221555504_NewMaxDesLen1.cs" />
+    <Compile Include="Migrations\202005221555504_NewMaxDesLen1.designer.cs">
+      <DependentUpon>202005221555504_NewMaxDesLen1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202005240009042_NewProductRules.cs" />
+    <Compile Include="Migrations\202005240009042_NewProductRules.designer.cs">
+      <DependentUpon>202005240009042_NewProductRules.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -100,6 +112,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202005120414066_UpdateCharCount.resx">
       <DependentUpon>202005120414066_UpdateCharCount.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202005191637335_NewMaxDesLen.resx">
+      <DependentUpon>202005191637335_NewMaxDesLen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202005221555504_NewMaxDesLen1.resx">
+      <DependentUpon>202005221555504_NewMaxDesLen1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202005240009042_NewProductRules.resx">
+      <DependentUpon>202005240009042_NewProductRules.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
