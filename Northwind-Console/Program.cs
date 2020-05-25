@@ -150,6 +150,7 @@ namespace NorthwindConsole
                             }
                             
                             string select = Console.ReadLine();
+                            bool editCategory = false; ;
                             foreach(var item in query)
                             {
                                 if(item.CategoryId == Convert.ToInt32(select))
@@ -163,14 +164,14 @@ namespace NorthwindConsole
                                     if (GetValidation(db))
                                     {
                                         logger.Info($"Category Updated: {name}");
-                                        db.SaveChanges();
+                                        editCategory = true;
                                     }
                                 }
                             }
-                            
-                        
-                            
-                            
+                            if (editCategory)
+                            {
+                                db.SaveChanges();
+                            }
                             
                         }
                         else if (categoryChoice == "6")
@@ -189,11 +190,13 @@ namespace NorthwindConsole
                                 try
                                 {
                                     int select = Convert.ToInt32(Console.ReadLine());
+                                    bool deleteCategoryTrue = false;
                                     foreach (var item in query)
                                     {
                                         if (item.CategoryId == select)
                                         {
                                             db.Categories.Remove(item);
+                                            deleteCategoryTrue = true;
                                         }
                                     }
                                     var productQuery = db.Products.OrderBy(p => p.ProductID);
@@ -204,7 +207,14 @@ namespace NorthwindConsole
                                             db.Products.Remove(item);
                                         }
                                     }
-
+                                    if (deleteCategoryTrue)
+                                    {
+                                        logger.Info("Category and related products deleted.");
+                                    }
+                                    else
+                                    {
+                                        logger.Info("Invalid Selection");
+                                    }
                                 }
                                 catch (Exception e)
                                 {
@@ -213,6 +223,7 @@ namespace NorthwindConsole
                                         logger.Error("Invalid Selection.");
                                     }
                                 }
+                                
                                 db.SaveChanges();
                             }
                         }
@@ -319,39 +330,6 @@ namespace NorthwindConsole
                                 string editSelection = Console.ReadLine();
                                 try
                                 {
-                                    /////////
-                                    /*
-                                    foreach (var item in query)
-                                    {
-                                        if (item.ProductID == Convert.ToInt32(editSelection))
-                                        {
-                                            
-                                            //Currently just lets the user update name and price
-                                            Console.WriteLine($"Enter the new product name. Was: {item.ProductName}");
-                                            string name = Console.ReadLine();
-                                            Console.WriteLine($"Enter the new price. Was: ${item.UnitPrice}");
-                                            string price = Console.ReadLine();
-                                            try
-                                            {
-                                                item.UnitPrice = Convert.ToDecimal(price);
-                                            }
-                                            catch
-                                            {
-                                                logger.Error("Invalid Price");
-                                                continue;
-                                            }
-                                            item.ProductName = name;
-                                            if (GetValidation(db))
-                                            {
-                                                logger.Info($"Product Updated: {name}");
-                                                db.SaveChanges();
-                                            }
-                                        }
-                                            
-                                            
-                                    }
-                                    */
-                                    /////////
                                     Console.Clear();
                                     int productSelect;
                                     try
@@ -428,6 +406,7 @@ namespace NorthwindConsole
                                             }
                                             string quantityPerUnit = Console.ReadLine();
                                             productQuery.QuantityPerUnit = quantityPerUnit;
+                                            db.SaveChanges();
                                             break;
                                         case "4":
                                             logger.Info("Product Edit Option 4 Selected");
@@ -443,6 +422,7 @@ namespace NorthwindConsole
                                             try
                                             {
                                                 productQuery.UnitsInStock = Convert.ToInt16(unitsInStock);
+                                                db.SaveChanges();
                                             }
                                             catch
                                             {
@@ -464,6 +444,7 @@ namespace NorthwindConsole
                                             try
                                             {
                                                 productQuery.UnitsOnOrder = Convert.ToInt16(unitsOnOrder);
+                                                db.SaveChanges();
                                             }
                                             catch
                                             {
@@ -485,6 +466,7 @@ namespace NorthwindConsole
                                             try
                                             {
                                                 productQuery.ReorderLevel = Convert.ToInt16(reorderLevel);
+                                                db.SaveChanges();
                                             }
                                             catch
                                             {
@@ -499,6 +481,7 @@ namespace NorthwindConsole
                                             try
                                             {
                                                 productQuery.Discontinued = Convert.ToBoolean(discontinued);
+                                                db.SaveChanges();
                                             }
                                             catch
                                             {
@@ -711,6 +694,7 @@ namespace NorthwindConsole
                                     {
                                         if (item.ProductID == select)
                                         {
+                                            logger.Info($"Product deleted: {item.ProductName}");
                                             db.Products.Remove(item);
                                         }
                                     }
@@ -730,11 +714,6 @@ namespace NorthwindConsole
                             }
                         }
                     }
-                    ///////
-                    
-                    
-                    
-                    
                     Console.WriteLine();
                     
                 } while (choice.ToLower() != "q");
